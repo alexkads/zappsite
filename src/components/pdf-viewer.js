@@ -9,10 +9,6 @@ pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
 export default function PDFViewer(props) {  
   const [numPages, setNumPages] = useState(null);
 
-  function onFileChange(event) {
-    setFile(event.target.files[0]);
-  }
-
   function onDocumentLoadSuccess({ numPages: nextNumPages }) {
     setNumPages(nextNumPages);
   }
