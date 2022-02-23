@@ -6,8 +6,13 @@ import workerSrc from "../pdf-worker";
 
 pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
 
-export default function PDFViewer(props) {  
+export default function PDFViewer(props) {
+  const [file, setFile] = useState(props.file);
   const [numPages, setNumPages] = useState(null);
+
+  function onFileChange(event) {
+    setFile(event.target.files[0]);
+  }
 
   function onDocumentLoadSuccess({ numPages: nextNumPages }) {
     setNumPages(nextNumPages);
@@ -16,13 +21,18 @@ export default function PDFViewer(props) {
   return (
     <div>
       <div>
-        <Document file={props.file} onLoadSuccess={onDocumentLoadSuccess}>
+        <label htmlFor="file">Load from file:</label>{" "}
+        <input onChange={onFileChange} type="file" />
+      </div>
+      <div>
+        <Document file={file} onLoadSuccess={onDocumentLoadSuccess} options={{cMapPacked: true }} externalLinkRel="_blank">
           {Array.from({ length: numPages }, (_, index) => (
             <Page
               key={`page_${index + 1}`}
               pageNumber={index + 1}
-              renderAnnotationLayer={false}
-              renderTextLayer={false}
+              renderAnnotationLayer={true}
+              renderTextLayer={true}
+              renderMode="svg"
             />
           ))}
         </Document>
